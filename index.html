@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suntzu Renting - Encuentra tu coche ideal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .header .emoji {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .form-section {
+            display: block;
+        }
+        
+        .form-section.hidden {
+            display: none;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        input:invalid {
+            border-color: #e0e0e0;
+        }
+        
+        input.error {
+            border-color: #ef4444;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .submit-btn .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        .submit-btn.loading .btn-text {
+            display: none;
+        }
+        
+        .submit-btn.loading .spinner {
+            display: block;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .success-section {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: scaleIn 0.5s ease-out;
+        }
+        
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+        
+        .success-section h2 {
+            color: #10b981;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        
+        .success-section p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 5px;
+        }
+        
+        .info-box h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-box li {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.8;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .info-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .phone-preview {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .phone-preview.show {
+            display: block;
+        }
+        
+        .phone-preview p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .phone-preview strong {
+            color: #333;
+        }
+        
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .header .emoji {
+                font-size: 50px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="emoji">🚗</div>
+            <h1>Suntzu Renting</h1>
+            <p>Tu solución de renting flexible y sin complicaciones</p>
+        </div>
+        
+        <div class="content">
+            <!-- FORMULARIO -->
+            <div id="formSection" class="form-section">
+                <h2 style="margin-bottom: 20px; color: #333;">Solicita una llamada gratuita</h2>
+                <p style="color: #666; margin-bottom: 25px;">
+                    Déjanos tus datos y <strong>Dani</strong>, nuestro asistente de IA, te llamará en menos de 1 minuto para ayudarte a encontrar el coche perfecto.
+                </p>
+                
+                <form id="leadForm">
+                    <div class="form-group">
+                        <label for="nombre">Nombre completo *</label>
+                        <input 
+                            type="text" 
+                            id="nombre" 
+                            name="nombre" 
+                            placeholder="Ej: Juan Pérez García"
+                            required
+                            minlength="3"
+                            autocomplete="name"
+                        />
+                        <div class="error-message" id="nombreError">
+                            Por favor, introduce tu nombre completo
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono">Teléfono móvil *</label>
+                        <input 
+                            type="tel" 
+                            id="telefono" 
+                            name="telefono" 
+                            placeholder="Ej: 600123456"
+                            required
+                            pattern="[6-7][0-9]{8}"
+                            maxlength="9"
+                            autocomplete="tel"
+                        />
+                        <div class="error-message" id="telefonoError">
+                            Introduce un número válido (9 dígitos, empezando por 6 o 7)
+                        </div>
+                        <div class="phone-preview" id="phonePreview">
+                            <p>📞 Llamaremos a: <strong id="phoneDisplay"></strong></p>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span class="btn-text">📞 Solicitar Llamada Ahora</span>
+                        <div class="spinner"></div>
+                    </button>
+                </form>
+                
+                <div class="info-box">
+                    <h3>🤖 ¿Cómo funciona?</h3>
+                    <ul>
+                        <li>Dani te llamará en menos de 1 minuto</li>
+                        <li>Te hará 3 preguntas rápidas sobre tus necesidades</li>
+                        <li>Resolverá cualquier duda que tengas</li>
+                        <li>Te transferirá con un especialista si lo deseas</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #888; font-size: 13px;">
+                        ⏱️ Tiempo estimado de llamada: 3-5 minutos
+                    </p>
+                </div>
+            </div>
+            
+            <!-- MENSAJE DE ÉXITO -->
+            <div id="successSection" class="form-section hidden">
+                <div class="success-section">
+                    <div class="success-icon">✅</div>
+                    <h2>¡Solicitud enviada con éxito!</h2>
+                    <p style="font-size: 18px; margin: 20px 0;">
+                        <strong id="successName"></strong>, recibirás una llamada de <strong>Dani</strong> en breve.
+                    </p>
+                    <p>
+                        📞 Llamaremos al <strong id="successPhone"></strong>
+                    </p>
+                    
+                    <div class="info-box" style="margin-top: 30px;">
+                        <h3>💡 Consejos para la llamada:</h3>
+                        <ul>
+                            <li>Ten tu teléfono cerca y el volumen activado</li>
+                            <li>La llamada puede llegar en 30-60 segundos</li>
+                            <li>Si no puedes atender, Dani lo intentará de nuevo</li>
+                            <li>Prepara cualquier pregunta que tengas sobre renting</li>
+                        </ul>
+                    </div>
+                    
+                    <p style="margin-top: 20px; color: #888; font-size: 14px;">
+                        Si no recibes la llamada en 2 minutos, verifica que introduciste bien tu número.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🔒 Tus datos están protegidos. No compartimos tu información.</p>
+            <p style="margin-top: 5px;">© 2024 Suntzu Renting - Renting de vehículos</p>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // CONFIGURACIÓN - Cambia esta URL
+        // ========================================
+        
+        // Para desarrollo local:
+        // const API_URL = 'http://localhost:8000';
+        
+        // Para producción con Render:
+        const API_URL = 'https://suntzu-renting-api.onrender.com';
+        
+        // Para desarrollo con ngrok:
+        // const API_URL = 'https://tu-ngrok.ngrok-free.app';
+        
+        // ========================================
+        // ELEMENTOS DEL DOM
+        // ========================================
+        const form = document.getElementById('leadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formSection = document.getElementById('formSection');
+        const successSection = document.getElementById('successSection');
+        const nombreInput = document.getElementById('nombre');
+        const telefonoInput = document.getElementById('telefono');
+        const phonePreview = document.getElementById('phonePreview');
+        const phoneDisplay = document.getElementById('phoneDisplay');
+        
+        // ========================================
+        // VALIDACIÓN EN TIEMPO REAL
+        // ========================================
+        
+        nombreInput.addEventListener('input', (e) => {
+            const value = e.target.value.trim();
+            const errorEl = document.getElementById('nombreError');
+            
+            if (value.length > 0 && value.length < 3) {
+                nombreInput.classList.add('error');
+                errorEl.classList.add('show');
+            } else {
+                nombreInput.classList.remove('error');
+                errorEl.classList.remove('show');
+            }
+        });
+        
+        telefonoInput.addEventListener('input', (e) => {
+            // Solo permitir números
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 9);
+            
+            const value = e.target.value;
+            const errorEl = document.getElementById('telefonoError');
+            
+            // Mostrar preview del número
+            if (value.length >= 3) {
+                phoneDisplay.textContent = '+34 ' + value;
+                phonePreview.classList.add('show');
+            } else {
+                phonePreview.classList.remove('show');
+            }
+            
+            // Validación
+            if (value.length > 0 && (value.length !== 9 || !value.match(/^[67]/))) {
+                telefonoInput.classList.add('error');
+                errorEl.classList.add('show');
+            } else {
+                telefonoInput.classList.remove('error');
+                errorEl.classList.remove('show');
+            }
+        });
+        
+        // ========================================
+        // ENVÍO DEL FORMULARIO
+        // ========================================
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const nombre = nombreInput.value.trim();
+            const telefono = telefonoInput.value.trim();
+            
+            // Validación final
+            if (nombre.length < 3) {
+                nombreInput.classList.add('error');
+                document.getElementById('nombreError').classList.add('show');
+                nombreInput.focus();
+                return;
+            }
+            
+            if (!telefono.match(/^[67][0-9]{8}$/)) {
+                telefonoInput.classList.add('error');
+                document.getElementById('telefonoError').classList.add('show');
+                telefonoInput.focus();
+                return;
+            }
+            
+            // Deshabilitar botón y mostrar loading
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            
+            try {
+                // Llamar al backend para iniciar la llamada
+                const response = await fetch(`${API_URL}/api/iniciar-llamada`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nombre: nombre,
+                        telefono: telefono
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Éxito - Mostrar mensaje de confirmación
+                    document.getElementById('successName').textContent = nombre;
+                    document.getElementById('successPhone').textContent = '+34 ' + telefono;
+                    
+                    // Cambiar de formulario a mensaje de éxito
+                    formSection.classList.add('hidden');
+                    successSection.classList.remove('hidden');
+                    
+                    // Scroll suave al inicio
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Opcional: Enviar evento a analytics
+                    if (window.gtag) {
+                        gtag('event', 'lead_submitted', {
+                            'event_category': 'Lead Generation',
+                            'event_label': 'Suntzu Renting'
+                        });
+                    }
+                    
+                    console.log('✅ Llamada iniciada correctamente');
+                    
+                } else {
+                    throw new Error(data.error || 'Error al procesar la solicitud');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                
+                // Mostrar mensaje de error
+                alert('Hubo un problema al procesar tu solicitud. Por favor, inténtalo de nuevo en unos momentos.');
+                
+                // Reactivar botón
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+            }
+        });
+        
+        // ========================================
+        // PREVENIR DOBLE SUBMIT
+        // ========================================
+        
+        form.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && submitBtn.disabled) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
